@@ -1,0 +1,16 @@
+{
+  "blogs": [
+    {
+      "title": "Which One Should You Read?",
+      "body": "Maurice, I posit, is an inherently happy book, and The Well of Loneliness is the opposite. They both harness either sorrow or joy to deliver a powerful narrative.",
+      "date": "Sat Feb 26 2022",
+      "id": 3
+    },
+    {
+      "title": "10 Habits Of Only 1% People",
+      "body": "Success is something that we all want. We’ve read about it, heard about it, fantasized about it, and even watched movies about it. But how many of us are actually able to achieve success?",
+      "date": "2/26/2022",
+      "id": 5
+    }
+  ]
+}

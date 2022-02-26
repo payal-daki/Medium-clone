@@ -1,0 +1,66 @@
+.navBar{
+   display: flex; 
+}
+.divOne{
+    display: flex;
+    margin-left: 15%;
+}
+.userNameDiv{
+    margin: 10px 0;
+    font-size: 18px;
+    font-weight: 400;
+}
+.divTwo{
+    display: flex; 
+    justify-content: right;
+    position: relative;
+    right: 0;
+    margin-left: 45%;
+}
+.divTwo img{
+    width: 18px;
+    margin: 0 10px;
+}
+.mediumLogo > img{
+    width: 45px;
+    margin: 0 10px;
+}
+.publistBtn{
+    background-color: green;
+    color: whitesmoke;
+    border: none;
+    border-radius: 15px;
+    padding: 0 2px;
+    width: 65px;
+    height: 25px;
+    font-size: 14px;
+    line-height: 15px;
+    margin:0 10px;
+}
+.dropDown{
+    width: 40px;
+    border: none;
+    font-size: 16px;
+}
+.userIcon{
+    background-color: teal;
+    color: whitesmoke;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 20px;
+    margin: -3px 10px;
+}
+
+.title{
+    width: 60%;
+    font-size: 42px;
+    border: none;
+    margin: 30px 0;
+}
+.body{
+    width: 60%;
+    border: none;
+    font-size: 21px;
+    
+}

@@ -1,0 +1,2 @@
+export const ADD_BLOG_SUCCESS = "ADD_BLOG_SUCCESS"
+export const GET_BLOG_SUCCESS = "GET_BLOG_SUCCESS"
