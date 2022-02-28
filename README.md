@@ -13,6 +13,6 @@ website also you can filter the various articles shown by their tag names.
 # ...................................................................................................
 
 # Instruction for the Running the code.
-1.Install the node modules by using " npm i "
-2.Run the json-server by using " npx json-server db.json --port 3001 --watch "
-3. Do the " npm run start " and you will be taken to the homepage of our website.
+## 1.Install the node modules by using " npm i "
+## 2.Run the json-server by using " npx json-server db.json --port 3001 --watch "
+## 3. Do the " npm run start " and you will be taken to the homepage of our website.
