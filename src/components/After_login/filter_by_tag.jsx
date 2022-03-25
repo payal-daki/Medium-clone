@@ -14,7 +14,7 @@ export const FilterTag = ()=>{
     // const [tags,setTags] = useState(tagData)
     // console.log("searchTag",tags)
     // console.log("tagData",tagData,"setItems",items)
-    // let dispatch = useDispatch()
+    let dispatch = useDispatch()
     useEffect(()=>{
         HandleLoad()
        } ,[])
