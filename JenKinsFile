@@ -1,71 +1,52 @@
 pipeline {
     agent any
 
+    environment {
+        // Define any environment variables here, if needed
+        NODE_VERSION = '16.x' // Specify the Node.js version to use
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                // Clone the repository from Git
-                checkout scm
-            }
-        }
-
-        stage('Install Node.js') {
-            steps {
-                script {
-                    // Install Node.js and npm using nvm
-                    sh '''
-                    # Install nvm (Node Version Manager)
-                    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-
-                    # Load nvm
-                    export NVM_DIR="$HOME/.nvm"
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-
-                    # Install Node.js and npm
-                    nvm install node
-                    nvm use node
-
-                    # Verify installation
-                    node -v
-                    npm -v
-                    '''
-                }
+                // Checkout the code from GitHub
+                git url: 'https://github.com/your-repo/your-app.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
+                // Install Node.js and npm
                 script {
-                    // Install Node.js modules
-                    sh 'npm install'
+                    def nodeHome = tool name: 'NodeJS', type: 'NodeJSInstallation'
+                    env.PATH = "${nodeHome}/bin:${env.PATH}"
                 }
+                // Install npm dependencies
+                sh 'npm install'
             }
         }
 
-        stage('Run JSON Server') {
+        stage('Run json-server') {
             steps {
-                script {
-                    // Start JSON Server in the background
-                    sh 'npx json-server db.json --port 3001 --watch &'
-                }
+                // Run json-server on port 3001 in the background
+                sh 'npx json-server db.json --port 3001 --watch &'
             }
         }
 
-        stage('Run Application') {
+        stage('Start Application') {
             steps {
-                script {
-                    // Start the React application
-                    sh 'npm start'
-                }
+                // Start the React application
+                sh 'npm start'
             }
         }
     }
 
     post {
         always {
-            // Clean up if necessary
-            sh 'pkill -f "json-server" || true'
-            sh 'pkill -f "npm start" || true'
+            // Clean up or notify
+            echo 'Cleaning up...'
+            sh 'pkill -f json-server || true'  // Kill json-server if running
+            sh 'pkill -f npm || true'  // Kill npm if running
         }
     }
 }
