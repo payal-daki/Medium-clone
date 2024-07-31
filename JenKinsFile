@@ -5,44 +5,44 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Ensure Node.js is available
+                    // Install Node modules
                     sh 'npm install'
                 }
             }
         }
         
-        stage('Build') {
+        stage('Start JSON Server') {
             steps {
                 script {
-                    // Replace 'npm run build' with the correct build command if needed
-                    sh 'npm run build'
+                    // Start JSON Server in the background
+                    sh 'npx json-server db.json --port 3001 --watch &'
                 }
             }
         }
         
-        stage('Test') {
+        stage('Start Application') {
             steps {
                 script {
-                    // Replace with your actual test command
-                    sh 'npm test'
-                }
-            }
-        }
-        
-        stage('Eject') {
-            steps {
-                script {
-                    // Run the eject command if using Create React App or similar
-                    sh 'npm run eject'
+                    // Start the application
+                    sh 'npm run start'
                 }
             }
         }
 
-        stage('Start JSON Server') {
+        stage('Test') {
             steps {
                 script {
-                    // Start the json-server in the background
-                    sh 'npx json-server db.json --port 3001 --watch &'
+                    // Run your tests
+                    sh 'npm test'
+                }
+            }
+        }
+
+        stage('Eject') {
+            steps {
+                script {
+                    // Eject if using Create React App or similar
+                    sh 'npm run eject'
                 }
             }
         }
@@ -52,7 +52,8 @@ pipeline {
         always {
             // Clean up after build
             echo 'Cleaning up...'
-            sh 'kill $(lsof -t -i:3001) || true' // Stop json-server if running
+            // Stop the JSON Server if it's still running
+            sh 'kill $(lsof -t -i:3001) || true'
         }
     }
 }
