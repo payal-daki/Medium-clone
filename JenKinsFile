@@ -2,50 +2,54 @@ pipeline {
     agent any
 
     environment {
-        // Set PATH to include the directory where Node.js and npm are installed
-        PATH = "/home/ubuntu/.nvm/versions/node/v22.5.1/bin:${env.PATH}"
+        NODE_VERSION = '22' // Change this to the Node.js version you need
+        PORT = '3001'
     }
 
     stages {
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
+                // Checkout the code from GitHub
+                git url: 'https://github.com/yourusername/your-repo.git'
+            }
+        }
+
+        stage('Setup') {
+            steps {
+                // Install Node.js
                 script {
-                    checkout scm
+                    def nodeHome = tool name: 'nodejs', type: 'NodeJS'
+                    env.PATH = "${nodeHome}/bin:${env.PATH}"
                 }
             }
         }
+
         stage('Install Dependencies') {
             steps {
-                script {
-                    sh 'npm install'
-                }
+                // Install Node.js modules
+                sh 'npm install'
             }
         }
-        stage('Start JSON Server') {
+
+        stage('Run json-server') {
             steps {
-                script {
-                    sh 'npx json-server db.json --port 3001 --watch &'
-                }
+                // Start the json-server in the background
+                sh 'npx json-server db.json --port ${PORT} --watch &'
             }
         }
+
         stage('Start Application') {
             steps {
-                script {
-                    sh 'npm run start'
-                }
+                // Start the application
+                sh 'npm run start'
             }
         }
     }
 
     post {
         always {
-            echo 'Pipeline finished'
-        }
-        success {
-            echo 'Pipeline succeeded'
-        }
-        failure {
-            echo 'Pipeline failed'
+            // Clean up actions, such as stopping the server if needed
+            sh 'kill $(lsof -t -i:${PORT}) || true'
         }
     }
 }
