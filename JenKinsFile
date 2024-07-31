@@ -9,6 +9,27 @@ pipeline {
             }
         }
 
+        stage('Install Node.js') {
+            steps {
+                script {
+                    // Install Node.js and npm
+                    sh '''
+                    # Update package list and install prerequisites
+                    sudo apt-get update
+                    sudo apt-get install -y curl
+
+                    # Install Node.js and npm
+                    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+                    sudo apt-get install -y nodejs
+
+                    # Verify installation
+                    node -v
+                    npm -v
+                    '''
+                }
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 script {
@@ -31,7 +52,7 @@ pipeline {
             steps {
                 script {
                     // Start the React application
-                    sh 'npm run start'
+                    sh 'npm start'
                 }
             }
         }
