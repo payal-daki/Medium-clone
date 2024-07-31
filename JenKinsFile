@@ -1,30 +1,43 @@
 pipeline {
     agent any
-    stages {
-        stage('Checkout') {
-            steps {
-                git url: 'https://github.com/payal-daki/Medium-clone.git'
-            }
-        }
 
+    stages {
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
-            }
-        }
-
-        stage('Run json-server') {
-            steps {
                 script {
-                    def jsonServerProcess = sh(script: 'npx json-server db.json --port 3001 --watch & echo $!', returnStdout: true).trim()
-                    env.JSON_SERVER_PID = jsonServerProcess
+                    // Install Node modules
+                    sh 'npm install'
                 }
             }
         }
-
-        stage('Start Application') {
+        stage('Start JSON Server') {
             steps {
-                sh 'npm start &'
+                script {
+                    // Start JSON server in the background
+                    sh 'npx json-server db.json --port 3001 --watch &'
+                }
             }
         }
+        stage('Start Application') {
+            steps {
+                script {
+                    // Start the application
+                    sh 'npm run start'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Clean up actions if needed
+            echo 'Pipeline finished'
+        }
+        success {
+            echo 'Pipeline succeeded'
+        }
+        failure {
+            echo 'Pipeline failed'
+        }
+    }
 }
