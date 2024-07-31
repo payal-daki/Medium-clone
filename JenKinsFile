@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout the code from GitHub
-                git url: 'https://github.com/your-repo/your-app.git'
+                git url: 'https://github.com/payal-daki/Medium-clone.git'
             }
         }
 
