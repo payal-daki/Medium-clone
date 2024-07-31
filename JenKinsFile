@@ -1,52 +1,30 @@
 pipeline {
     agent any
-
-    environment {
-        // Define any environment variables here, if needed
-        NODE_VERSION = '16.x' // Specify the Node.js version to use
-    }
-
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the code from GitHub
                 git url: 'https://github.com/payal-daki/Medium-clone.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                // Install Node.js and npm
-                script {
-                    def nodeHome = tool name: 'NodeJS', type: 'NodeJSInstallation'
-                    env.PATH = "${nodeHome}/bin:${env.PATH}"
-                }
-                // Install npm dependencies
                 sh 'npm install'
             }
         }
 
         stage('Run json-server') {
             steps {
-                // Run json-server on port 3001 in the background
-                sh 'npx json-server db.json --port 3001 --watch &'
+                script {
+                    def jsonServerProcess = sh(script: 'npx json-server db.json --port 3001 --watch & echo $!', returnStdout: true).trim()
+                    env.JSON_SERVER_PID = jsonServerProcess
+                }
             }
         }
 
         stage('Start Application') {
             steps {
-                // Start the React application
-                sh 'npm start'
+                sh 'npm start &'
             }
         }
-    }
-
-    post {
-        always {
-            // Clean up or notify
-            echo 'Cleaning up...'
-            sh 'pkill -f json-server || true'  // Kill json-server if running
-            sh 'pkill -f npm || true'  // Kill npm if running
-        }
-    }
 }
