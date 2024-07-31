@@ -1,55 +1,61 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs 'NodeJS' // The name of the NodeJS installation in Jenkins
+    }
+
     environment {
-        NODE_VERSION = '22' // Ensure this matches the Node.js version installed in Jenkins
         PORT = '3001'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the code from GitHub
-                git url: 'https://github.com/payal-daki/Medium-clone.git'
-            }
-        }
-
-        stage('Setup') {
-            steps {
-                // Install Node.js
-                script {
-                    def nodeHome = tool name: 'NodeJS', type: 'NodeJS'
-                    env.PATH = "${nodeHome}/bin:${env.PATH}"
-                }
+                // Clone the repository
+                git 'https://github.com/payal-daki/Medium-clone.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                // Install Node.js modules
+                // Install Node.js dependencies
                 sh 'npm install'
             }
         }
 
-        stage('Run json-server') {
+        stage('Run JSON Server') {
             steps {
-                // Start the json-server in the background
-                sh 'npx json-server db.json --port ${PORT} --watch &'
+                // Run JSON Server in the background
+                sh 'npx json-server db.json --port $PORT --watch &'
             }
         }
 
-        stage('Start Application') {
+        stage('Run Application') {
             steps {
                 // Start the application
                 sh 'npm run start'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                // Run your tests here if you have any
+                // Example: sh 'npm test'
+            }
+        }
+
+        stage('Clean Up') {
+            steps {
+                // Optionally, stop JSON Server and other cleanup tasks
+                sh 'pkill -f "json-server"'
             }
         }
     }
 
     post {
         always {
-            // Clean up actions, such as stopping the server if needed
-            sh 'kill $(lsof -t -i:${PORT}) || true'
+            // Actions to always perform, like sending notifications
         }
     }
 }
