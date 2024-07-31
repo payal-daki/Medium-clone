@@ -1,17 +1,29 @@
 pipeline {
     agent any
+    
+    environment {
+        // Define any necessary environment variables
+        NODE_HOME = tool name: 'NodeJS', type: 'NodeJSInstallation'
+    }
 
     stages {
+        stage('Checkout') {
+            steps {
+                // Clone the repository from Git
+                checkout scm
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Install Node modules
+                    // Install Node.js modules
                     sh 'npm install'
                 }
             }
         }
-        
-        stage('Start JSON Server') {
+
+        stage('Run JSON Server') {
             steps {
                 script {
                     // Start JSON Server in the background
@@ -19,30 +31,12 @@ pipeline {
                 }
             }
         }
-        
-        stage('Start Application') {
+
+        stage('Run Application') {
             steps {
                 script {
-                    // Start the application
+                    // Start the React application
                     sh 'npm run start'
-                }
-            }
-        }
-
-        stage('Test') {
-            steps {
-                script {
-                    // Run your tests
-                    sh 'npm test'
-                }
-            }
-        }
-
-        stage('Eject') {
-            steps {
-                script {
-                    // Eject if using Create React App or similar
-                    sh 'npm run eject'
                 }
             }
         }
@@ -50,10 +44,9 @@ pipeline {
 
     post {
         always {
-            // Clean up after build
-            echo 'Cleaning up...'
-            // Stop the JSON Server if it's still running
-            sh 'kill $(lsof -t -i:3001) || true'
+            // Clean up if necessary
+            sh 'pkill -f "json-server" || true'
+            sh 'pkill -f "npm start" || true'
         }
     }
 }
