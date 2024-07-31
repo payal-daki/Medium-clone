@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    // Ensure Node.js is available
+                    sh 'npm install'
+                }
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                script 
+                    sh 'npm run start'
+                }
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                script {
+                    // Replace with your actual test command
+                    sh 'npm test'
+                }
+            }
+        }
+        
+        stage('Eject') {
+            steps {
+                script {
+                    sh 'npm run eject'
+                }
+            }
+        }
+
+        stage('Start JSON Server') {
+            steps {
+                script {
+                    // Start the json-server
+                    sh 'npx json-server db.json --port 3001 --watch &'
+                }
+            }
+        }
+}
