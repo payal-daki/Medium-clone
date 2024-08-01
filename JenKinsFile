@@ -18,6 +18,18 @@ pipeline {
             }
         }
         
+        stage('Build') {
+            steps {
+                script {
+                    dir('Medium-clone') {
+                        // Optionally, you can run any build commands here if needed
+                        // For example, if you are using a build tool like Webpack:
+                        // sh 'npm run build'
+                    }
+                }
+            }
+        }
+        
         stage('Deploy') {
             steps {
                 script {
@@ -33,13 +45,6 @@ pipeline {
                     }
                 }
             }
-        }
-    }
-
-    post {
-        always {
-            // Clean up after the build if necessary
-            sh 'rm -rf Medium-clone'
         }
     }
 }
