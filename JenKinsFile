@@ -2,22 +2,6 @@ pipeline {
     agent any // Use any available agent
 
     stages {
-        stage('Update and Install Node.js') {
-            steps {
-                script {
-                    // Update package list
-                    sh 'sudo apt update'
-                    
-                    // Install Node.js and npm
-                    sh '''
-                    sudo apt install -y nodejs npm
-                    node -v
-                    npm -v
-                    '''
-                }
-            }
-        }
-        
         stage('Fetch Project Repo') {
             steps {
                 script {
@@ -26,8 +10,9 @@ pipeline {
                     
                     // Navigate to the project directory
                     dir('Medium-clone') {
-                        // Install project dependencies
-                        sh 'npm install --verbose'
+                        // Check Node.js and npm versions
+                        sh 'node -v'
+                        sh 'npm -v'
                     }
                 }
             }
