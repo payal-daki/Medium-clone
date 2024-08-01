@@ -1,61 +1,86 @@
 pipeline {
-    agent any
-
-    tools {
-        nodejs 'NodeJS' // The name of the NodeJS installation in Jenkins
-    }
-
-    environment {
-        PORT = '3001'
-    }
+    agent any // Use any available agent
 
     stages {
-        stage('Checkout') {
+        stage('Update and Install Node.js') {
             steps {
-                // Clone the repository
-                git 'https://github.com/payal-daki/Medium-clone.git'
+                script {
+                    // Update package list and install necessary packages
+                    sh 'sudo apt update'
+                    
+                    // Install Node.js and npm
+                    sh 'sudo apt install -y nodejs npm'
+                }
             }
         }
-
-        stage('Install Dependencies') {
+        
+        stage('Fetch Project Repo') {
             steps {
-                // Install Node.js dependencies
-                sh 'npm install'
+                script {
+                    // Clone the project repository
+                    sh 'git clone https://github.com/yourusername/your-repo.git'
+                    
+                    // Navigate to the project directory
+                    dir('your-repo') {
+                        // Install project dependencies
+                        sh 'npm install'
+                    }
+                }
             }
         }
-
-        stage('Run JSON Server') {
+        
+        stage('Build') {
             steps {
-                // Run JSON Server in the background
-                sh 'npx json-server db.json --port $PORT --watch &'
+                script {
+                    dir('your-repo') {
+                        // Build the project
+                        sh 'npm run build'
+                    }
+                }
             }
         }
-
-        stage('Run Application') {
+        
+        stage('Test') {
             steps {
-                // Start the application
-                sh 'npm run start'
+                script {
+                    dir('your-repo') {
+                        // Run tests
+                        sh 'npm test'
+                    }
+                }
             }
         }
-
-        stage('Run Tests') {
+        
+        stage('Eject') {
             steps {
-                // Run your tests here if you have any
-                // Example: sh 'npm test'
+                script {
+                    dir('your-repo') {
+                        // Eject if necessary (only needed for certain setups, not always required)
+                        sh 'npm run eject'
+                    }
+                }
             }
         }
-
-        stage('Clean Up') {
+        
+        stage('Deploy') {
             steps {
-                // Optionally, stop JSON Server and other cleanup tasks
-                sh 'pkill -f "json-server"'
+                script {
+                    dir('your-repo') {
+                        // Start json-server in the background
+                        sh 'npx json-server db.json --port 3001 --watch &'
+                        
+                        // Start npm server in the background
+                        sh 'npm start &'
+                    }
+                }
             }
         }
     }
 
     post {
         always {
-            // Actions to always perform, like sending notifications
+            // Clean up after the build if necessary
+            sh 'rm -rf your-repo'
         }
     }
 }
