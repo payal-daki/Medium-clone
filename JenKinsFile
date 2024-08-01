@@ -27,7 +27,7 @@ pipeline {
                     // Navigate to the project directory
                     dir('Medium-clone') {
                         // Install project dependencies
-                        sh 'npm install'
+                        sh 'npm install --verbose'
                     }
                 }
             }
