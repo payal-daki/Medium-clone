@@ -18,10 +18,10 @@ pipeline {
             steps {
                 script {
                     // Clone the project repository
-                    sh 'git clone https://github.com/yourusername/your-repo.git'
+                    sh 'git clone https://github.com/payal-daki/Medium-clone.git'
                     
                     // Navigate to the project directory
-                    dir('your-repo') {
+                    dir('Medium-clone') {
                         // Install project dependencies
                         sh 'npm install'
                     }
@@ -32,7 +32,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    dir('your-repo') {
+                    dir('Medium-clone') {
                         // Build the project
                         sh 'npm run build'
                     }
@@ -43,7 +43,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    dir('your-repo') {
+                    dir('Medium-clone') {
                         // Run tests
                         sh 'npm test'
                     }
@@ -54,7 +54,7 @@ pipeline {
         stage('Eject') {
             steps {
                 script {
-                    dir('your-repo') {
+                    dir('Medium-clone') {
                         // Eject if necessary (only needed for certain setups, not always required)
                         sh 'npm run eject'
                     }
@@ -65,7 +65,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    dir('your-repo') {
+                    dir('Medium-clone') {
                         // Start json-server in the background
                         sh 'npx json-server db.json --port 3001 --watch &'
                         
@@ -80,7 +80,7 @@ pipeline {
     post {
         always {
             // Clean up after the build if necessary
-            sh 'rm -rf your-repo'
+            sh 'rm -rf Medium-clone'
         }
     }
 }
